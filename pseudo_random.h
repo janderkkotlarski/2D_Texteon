@@ -18,24 +18,49 @@ std::vector <unsigned int> random_initializer(const unsigned int fibomax)
 	return ranma;	
 }
 
+void fibo_error(std::vector <unsigned int>& fibonac)
+{
+	std::cerr << "Can't fibonacci this, user!\n";
+		
+	while(fibonac.size() > 0);
+	{
+			fibonac.pop_back();
+	}
+}
+
 void pseudonacci(std::vector <unsigned int>& fibonac, const unsigned int fibomax)
 {
 	assert(fibonac.size() == 2);
 	
-	const unsigned int temp{fibonac[1]};
+	if (fibonac.size() == 2)
+	{	
+		const unsigned int temp{fibonac[1]};
+		
+		fibonac[1] = (fibonac[1] + fibonac[0]) % fibomax;
+		fibonac[0] = temp;	
+	}
+	else
+	{
+		fibo_error(fibonac);
+	}
+}
+
+float fractionize(std::vector <unsigned int>& fibonac, const unsigned int fibomax)
+{
+	assert(fibonac.size() == 2);
 	
-	fibonac[1] = (fibonac[1] + fibonac[0]) % fibomax;
-	fibonac[0] = temp;	
+	pseudonacci(fibonac, fibomax);
+	return static_cast<float>(fibonac[1])/static_cast<float>(fibomax);
 }
 
 
-bool gamble()
+bool gamble(std::vector <unsigned int>& fibonac, const unsigned int fibomax)
 {	
 	const float fraction{0.60f};
 	assert(fraction > 0.0f);
 	assert(fraction < 1.0f);
 	
-	if (random_part > fraction)
+	if (fractionize(fibonac, fibomax) > fraction)
 	{
 		return true;
 	}
@@ -43,7 +68,8 @@ bool gamble()
 	return false;
 }
 
-void luckey(int& side_x, int& side_y)
+void luckey(std::vector <unsigned int>& fibonac, const unsigned int fibomax,
+			int& side_x, int& side_y)
 {	
 	assert(side_x > 0);
 	assert(side_y > 0);
@@ -56,24 +82,21 @@ void luckey(int& side_x, int& side_y)
 	
 	int place_x{0};
 	int place_y{0};
-	
-	unsigned int max_unsigned {static_cast<unsigned int>(-1)};	
-	std::random_device rand;
-	
+
 	while (((abs(place_x) <= half_radius_x) && (abs(place_y) <= half_radius_y)) ||
 			((abs(place_x) >= radius_x) && (abs(place_y) >= radius_y)) ||
 			(((abs(place_x) % 2) == 1) || ((abs(place_y) % 2) == 1)))
 	{
 		place_x = static_cast<int>(
-			trunc(static_cast<float>(side_x)*static_cast<float>(rand())/static_cast<float>(max_unsigned))) -
+			trunc(static_cast<float>(side_x)*fractionize(fibonac, fibomax))) -
 			radius_x;
 			
 		place_y = static_cast<int>(
-			trunc(static_cast<float>(side_y)*static_cast<float>(rand())/static_cast<float>(max_unsigned))) -
+			trunc(static_cast<float>(side_y)*fractionize(fibonac, fibomax))) -
 			radius_y;	
 	}
 	
-	std::cout << '[' << place_x << ':' << place_y << ']' << '\n';
+	// std::cout << '[' << place_x << ':' << place_y << ']' << '\n';
 	
 	side_x = place_x + radius_x;
 	side_y = place_y + radius_y;

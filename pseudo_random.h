@@ -22,9 +22,9 @@ void fibo_error(std::vector <unsigned int>& fibonac)
 {
 	std::cerr << "Can't fibonacci this, user!\n";
 		
-	while(fibonac.size() > 0);
+	while(true);
 	{
-			fibonac.pop_back();
+		fibonac.pop_back();
 	}
 }
 
@@ -54,13 +54,13 @@ float fractionize(std::vector <unsigned int>& fibonac, const unsigned int fiboma
 }
 
 
-bool gamble(std::vector <unsigned int>& fibonac, const unsigned int fibomax)
+bool gamble(std::vector <unsigned int>& fibonac, const unsigned int fibomax, const float fraction)
 {	
-	const float fraction{0.60f};
 	assert(fraction > 0.0f);
 	assert(fraction < 1.0f);
 	
-	if (fractionize(fibonac, fibomax) > fraction)
+	if ((fractionize(fibonac, fibomax) > fraction) &&
+		(fraction > 0.0f) && (fraction < 1.0f))
 	{
 		return true;
 	}

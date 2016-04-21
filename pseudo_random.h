@@ -1,4 +1,26 @@
-std::vector <unsigned int> random_initializer(const unsigned int fibomax)
+void show_fibo(const std::vector <unsigned int>& fibonac)
+{
+	const unsigned int fibo_size{fibonac.size()};
+	
+	if (fibo_size > 0)
+	{
+		std::cout << '[';
+		
+		for (unsigned int count {0}; count < fibo_size; ++count)
+		{
+			std::cout << fibonac[count];
+			
+			if (count < fibo_size - 1)
+			{
+				std::cout << ':';
+			}
+		}
+		
+		std::cout << "]\n";
+	}
+}
+
+std::vector <unsigned int> random_initializer(const unsigned int fibo_max)
 {
 	std::random_device rand;			
 	std::vector <unsigned int> ranma{0, 0};
@@ -11,21 +33,27 @@ std::vector <unsigned int> random_initializer(const unsigned int fibomax)
 		while (ranma[count] == 0 ||
 			   ranma[0] == ranma[1])
 		{
-			ranma[count] = rand() % fibomax;
+			ranma[count] = rand() % fibo_max;
 		}
 	}
 			
 	return ranma;	
 }
 
-void fibo_error(std::vector <unsigned int>& fibonac)
+void fibo_fix(std::vector <unsigned int>& fibonac, const unsigned int fibo_max)
 {
-	std::cerr << "Can't fibonacci this, user!\n";
-	
-	
+	if (fibonac.size() != 2)
+	{
+		while(fibonac.size() > 0)
+		{
+			fibonac.pop_back();
+		}
+		
+		fibonac = random_initializer(fibo_max);
+	}
 }
 
-void pseudonacci(std::vector <unsigned int>& fibonac, const unsigned int fibomax)
+void pseudonacci(std::vector <unsigned int>& fibonac, const unsigned int fibo_max)
 {
 	assert(fibonac.size() == 2);
 	
@@ -33,30 +61,30 @@ void pseudonacci(std::vector <unsigned int>& fibonac, const unsigned int fibomax
 	{	
 		const unsigned int temp{fibonac[1]};
 		
-		fibonac[1] = (fibonac[1] + fibonac[0]) % fibomax;
-		fibonac[0] = temp;	
+		fibonac[1] = (fibonac[1] + fibonac[0]) % fibo_max;
+		fibonac[0] = temp;
 	}
 	else
 	{
-		fibo_error(fibonac);
+		fibo_fix(fibonac, fibo_max);
 	}
 }
 
-float fractionize(std::vector <unsigned int>& fibonac, const unsigned int fibomax)
+float fractionize(std::vector <unsigned int>& fibonac, const unsigned int fibo_max)
 {
 	assert(fibonac.size() == 2);
 	
-	pseudonacci(fibonac, fibomax);
-	return static_cast<float>(fibonac[1])/static_cast<float>(fibomax);
+	pseudonacci(fibonac, fibo_max);
+	return static_cast<float>(fibonac[1])/static_cast<float>(fibo_max);
 }
 
 
-bool gamble(std::vector <unsigned int>& fibonac, const unsigned int fibomax, const float fraction)
+bool gamble(std::vector <unsigned int>& fibonac, const unsigned int fibo_max, const float fraction)
 {	
 	assert(fraction > 0.0f);
 	assert(fraction < 1.0f);
 	
-	if ((fractionize(fibonac, fibomax) > fraction) &&
+	if ((fractionize(fibonac, fibo_max) > fraction) &&
 		(fraction > 0.0f) && (fraction < 1.0f))
 	{
 		return true;
@@ -65,7 +93,7 @@ bool gamble(std::vector <unsigned int>& fibonac, const unsigned int fibomax, con
 	return false;
 }
 
-void luckey(std::vector <unsigned int>& fibonac, const unsigned int fibomax,
+void luckey(std::vector <unsigned int>& fibonac, const unsigned int fibo_max,
 			int& side_x, int& side_y)
 {	
 	assert(side_x > 0);
@@ -85,11 +113,11 @@ void luckey(std::vector <unsigned int>& fibonac, const unsigned int fibomax,
 			(((abs(place_x) % 2) == 1) || ((abs(place_y) % 2) == 1)))
 	{
 		place_x = static_cast<int>(
-			trunc(static_cast<float>(side_x)*fractionize(fibonac, fibomax))) -
+			trunc(static_cast<float>(side_x)*fractionize(fibonac, fibo_max))) -
 			radius_x;
 			
 		place_y = static_cast<int>(
-			trunc(static_cast<float>(side_y)*fractionize(fibonac, fibomax))) -
+			trunc(static_cast<float>(side_y)*fractionize(fibonac, fibo_max))) -
 			radius_y;	
 	}
 	

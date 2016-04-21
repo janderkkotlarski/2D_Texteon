@@ -21,6 +21,8 @@ std::vector <unsigned int> random_initializer(const unsigned int fibomax)
 void fibo_error(std::vector <unsigned int>& fibonac)
 {
 	std::cerr << "Can't fibonacci this, user!\n";
+	
+	
 }
 
 void pseudonacci(std::vector <unsigned int>& fibonac, const unsigned int fibomax)

@@ -18,5 +18,9 @@
 int main()
 {
 	
+	std::vector <unsigned int> fibo{3, 3, 3};
+	
+	fibo_error(fibo);
+	
 	return 0;
 }

@@ -137,15 +137,15 @@ int maze_initiate(std::vector <std::vector < int>>& maze, const int radius,
 		{
 			for (int count_x{0}; count_x < side_x; ++count_x)
 			{
-				if ((abs(count_x - radius) > empty) &&
-					(abs(count_y - radius) > empty))
+				if (((abs(count_x - radius) % 2) == 1) &&
+					((abs(count_y - radius) % 2) == 1))
 				{
-					if (((abs(count_x - radius) % 2) == 1) &&
-						((abs(count_y - radius) % 2) == 1))
-					{
-						maze[count_y][count_x] = 1;
-					}
-					
+					maze[count_y][count_x] = 1;
+				}
+			
+				if ((abs(count_x - radius) > empty) ||
+					(abs(count_y - radius) > empty))
+				{				
 					if (((abs(count_x - radius) % 2) + (abs(count_y - radius) % 2)) == 1)
 					{
 						if (fraction < fractionize(fibonac, fibo_max))
@@ -175,11 +175,22 @@ int main()
 	std::vector <unsigned int> fibo{random_initializer(fibo_max)};	
 	show_fibo(fibo);
 	
-	const int radius{3};
+	const int radius{10};
+	
+	const int empty{2};
+	
+	const float fraction{0.35};
+	
+	
 	
 	std::vector <std::vector < int>> maze;
 		
 	if (create_maze(maze, radius) == -1)
+	{
+		return 1;
+	}
+	
+	if (maze_initiate(maze, radius, fibo, fibo_max, fraction, empty) == -1)
 	{
 		return 1;
 	}
